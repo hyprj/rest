@@ -1,5 +1,6 @@
 package com.pracownia.rest.Controller;
 
+import com.pracownia.rest.Models.Actor;
 import com.pracownia.rest.Models.Movie;
 import com.pracownia.rest.Services.MovieService;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class MovieController {
     public ResponseEntity <Optional<Movie>>GetSingleMovie (@PathVariable String title){
         Optional<Movie> movieFromDb = movieService.getSingleMovie(title);
         if (movieFromDb.isEmpty()){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(movieFromDb);
     }
@@ -35,7 +36,8 @@ public class MovieController {
     public ResponseEntity<Movie> addMovie(@RequestBody Movie movie) {
         Movie movieFromDb = movieService.addMovie(movie);
         if (movieFromDb == null){
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+//            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            return ResponseEntity.notFound().build();
         }
         else{
             return ResponseEntity.ok(movieFromDb);
@@ -54,11 +56,10 @@ public class MovieController {
     @DeleteMapping("/movies/{title}")
     public ResponseEntity<Optional<Movie>> deleteMovie(@PathVariable String title){
         try{
-
             movieService.deleteMovie(title);
         }
         catch(Exception e){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
     }
@@ -66,6 +67,19 @@ public class MovieController {
 
     @GetMapping("/movies/studio/{studioName}")
     public ResponseEntity<List<Movie>> getMoviesByStudio(@PathVariable String studioName){
-        return ResponseEntity.ok(movieService.getMoviesByStudio(studioName));
+//        return ResponseEntity.ok(movieService.getMoviesByStudio(studioName));
+        List<Movie> movies = movieService.getMoviesByStudio(studioName);
+        if (movies.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(movies);
+        }
     }
 }
+
+//    Optional<Actor> actorFromDb = actorService.getSingleActor(id);
+//        if (actorFromDb.isEmpty()){
+//                return ResponseEntity.notFound().build();
+//                }
+//                return ResponseEntity.ok(actorFromDb);
+//                }

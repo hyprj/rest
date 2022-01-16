@@ -2,6 +2,7 @@ package com.pracownia.rest.Controller;
 
 import com.pracownia.rest.Models.Actor;
 import com.pracownia.rest.Services.ActorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +13,12 @@ import java.util.Optional;
 @RestController
 public class ActorController {
 
-    private final ActorService actorService;
+    @Autowired
+    private ActorService actorService;
 
-    public ActorController(ActorService actorService) {
-        this.actorService = actorService;
-    }
+//    public ActorController(ActorService actorService) {
+//        this.actorService = actorService;
+//    }
 
     @GetMapping("/actors")
     public List<Actor> getActors() {
@@ -38,7 +40,7 @@ public class ActorController {
     public ResponseEntity<Optional<Actor>> getSingleActor(@PathVariable long id){
         Optional<Actor> actorFromDb = actorService.getSingleActor(id);
         if (actorFromDb.isEmpty()){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(actorFromDb);
     }
@@ -47,7 +49,7 @@ public class ActorController {
     public ResponseEntity<Actor> editActor(@PathVariable long id, @RequestBody Actor actor){
         Actor actorFromDb = actorService.editActor(id, actor);
         if (actorFromDb == null){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(actorFromDb);
     }
@@ -58,7 +60,7 @@ public class ActorController {
             actorService.deleteActor(id);
         }
         catch(Exception e){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
     }

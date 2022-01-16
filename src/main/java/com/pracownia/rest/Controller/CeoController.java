@@ -26,7 +26,8 @@ public class CeoController {
     public ResponseEntity<Ceo> addPrezes(@RequestBody Ceo ceo){
         Ceo ceoFromDb = ceoService.addCeo(ceo);
         if (ceoFromDb == null){
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+//            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            return ResponseEntity.notFound().build();
         }
         else{
             return ResponseEntity.ok(ceoFromDb);
@@ -37,7 +38,7 @@ public class CeoController {
     public ResponseEntity<Optional<Ceo>> getSinglePrezes(@PathVariable long id){
         Optional<Ceo> ceoFromDb = ceoService.getSingleCeo(id);
         if (ceoFromDb.isEmpty()){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(ceoFromDb);
     }
@@ -46,7 +47,7 @@ public class CeoController {
     public ResponseEntity<Ceo> editCeo(@RequestBody Ceo ceo){
         Ceo ceoFromDb = ceoService.editCeo(ceo);
         if (ceoFromDb == null){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(ceoFromDb);
     }
@@ -57,7 +58,7 @@ public class CeoController {
             ceoService.deleteCeo(id);
         }
         catch (Exception e) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().build();
     }

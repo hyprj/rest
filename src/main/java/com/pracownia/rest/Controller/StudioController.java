@@ -1,5 +1,6 @@
 package com.pracownia.rest.Controller;
 
+import com.pracownia.rest.Models.Actor;
 import com.pracownia.rest.Models.Studio;
 import com.pracownia.rest.Services.StudioService;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class StudioController {
     public ResponseEntity<Optional<Studio>> GetSingleStudio (@PathVariable String name){
         Optional<Studio> studioFromDb = studioService.getSingleStudio(name);
         if (studioFromDb.isEmpty()){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(studioFromDb);
     }
@@ -46,7 +47,7 @@ public class StudioController {
     public ResponseEntity<Studio> editStudio(@RequestBody Studio studio){
         Studio studioFromDb = studioService.editStudio(studio);
         if (studioFromDb == null){
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(studioFromDb);
     }
@@ -54,7 +55,20 @@ public class StudioController {
 
     @GetMapping("/studios/addresses/{address}")
     public ResponseEntity<List<Studio>> getStudiosMovies(@PathVariable String address){
-        return ResponseEntity.ok(studioService.getStudioByAdress(address));
-    }
+//        return ResponseEntity.ok(studioService.getStudioByAdress(address));
+        List<Studio> studio = studioService.getStudioByAdress(address);
 
-}
+                if (studio.isEmpty()){
+                return ResponseEntity.notFound().build();
+                }
+                return ResponseEntity.ok(studio);
+                }
+    }
+//}
+
+//    Optional<Actor> actorFromDb = actorService.getSingleActor(id);
+//        if (actorFromDb.isEmpty()){
+//                return ResponseEntity.notFound().build();
+//                }
+//                return ResponseEntity.ok(actorFromDb);
+//                }
